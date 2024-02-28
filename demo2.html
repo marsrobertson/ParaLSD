@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Force Touch Demo</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #info {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">Press on the screen to see force info here (only on Force Touch/3D Touch devices).</div>
+
+    <script>
+        function updateForceInfo(event) {
+            event.preventDefault();
+            
+            let force = 0;
+            const touch = event.touches[0];
+            
+            if (touch) {
+                force = touch.force || 0; // Get the force of the touch
+                const infoText = `Touch Force: ${force.toFixed(2)}<br>Position: (${touch.pageX.toFixed(2)}, ${touch.pageY.toFixed(2)})`;
+                document.getElementById('info').innerHTML = infoText;
+            }
+        }
+
+        document.addEventListener('touchstart', updateForceInfo);
+        document.addEventListener('touchmove', updateForceInfo);
+        document.addEventListener('touchend', () => {
+            document.getElementById('info').innerHTML = 'Press on the screen to see force info here (only on Force Touch/3D Touch devices).';
+        });
+    </script>
+</body>
+</html>

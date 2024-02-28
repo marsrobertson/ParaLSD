@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi-Touch Demo</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #info {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">Touch the screen with one or more fingers to see touch info here.</div>
+
+    <script>
+        function updateTouchInfo(event) {
+            event.preventDefault(); // Prevents the default action of the touch event (e.g., scroll, zoom)
+            
+            const touches = event.touches;
+            let infoText = 'Touches:<br>';
+            
+            for (let i = 0; i < touches.length; i++) {
+                infoText += `Touch ${i + 1}: (${touches[i].pageX.toFixed(2)}, ${touches[i].pageY.toFixed(2)})<br>`;
+            }
+            
+            document.getElementById('info').innerHTML = infoText;
+        }
+
+        document.addEventListener('touchstart', updateTouchInfo);
+        document.addEventListener('touchmove', updateTouchInfo);
+        document.addEventListener('touchend', () => {
+            document.getElementById('info').innerHTML = 'Touch the screen with one or more fingers to see touch info here.';
+        });
+    </script>
+</body>
+</html>

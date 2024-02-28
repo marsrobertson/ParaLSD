@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Circles Example</title>
+</head>
+<body>
+    <canvas id="myCanvas" style="width:100vw; height:100vh">
+        Your browser does not support the canvas element.
+    </canvas>
+
+    <style>
+
+html, body {
+ margin: 0;
+ padding: 0;
+}
+    </style>
+    <script>
+
+
+        // Get the canvas element by its ID
+        var canvas = document.getElementById('myCanvas');
+        // Get the context of the canvas to draw on it
+        var ctx = canvas.getContext('2d');
+
+        // Function to draw a circle
+        function drawCircle(x, y, radius) {
+            ctx.beginPath(); // Start a new path
+            ctx.arc(x, y, radius, 0, Math.PI * 2, true); // Create a circle
+            ctx.fillStyle = 'blue'; // Fill color of the circle
+            ctx.fill(); // Fill the circle with the color
+            ctx.stroke(); // Draw the circle outline
+        }
+
+        // Draw 5 circles at different positions
+        drawCircle(100, 100, 40); // Circle 1
+        drawCircle(200, 100, 40); // Circle 2
+        drawCircle(300, 100, 40); // Circle 3
+        drawCircle(200, 200, 40); // Circle 4
+        drawCircle(300, 300, 40); // Circle 5
+
+// Assuming the same drawCircle function and initial drawing code
+
+// Define the circles as objects for easier management
+var circles = [
+    {x: 100, y: 100, radius: 40},
+    {x: 200, y: 100, radius: 40},
+    {x: 300, y: 100, radius: 40},
+    {x: 200, y: 200, radius: 40},
+    {x: 300, y: 300, radius: 40}
+];
+
+// Redraw circles to apply the object structure
+function redrawCircles() {
+    circles.forEach(function(circle) {
+        drawCircle(circle.x, circle.y, circle.radius);
+    });
+}
+
+// Draw circles initially
+redrawCircles();
+
+// Function to check if a point is inside a circle
+function isInsideCircle(point, circle) {
+    var distance = Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2);
+    return distance < circle.radius;
+}
+
+// Handle touch events
+function onTouch(event) {
+    // Prevent the default action to ensure the touch is handled correctly
+    event.preventDefault();
+
+    // Get touch point relative to the canvas
+    var touchX = event.touches[0].clientX - canvas.offsetLeft;
+    var touchY = event.touches[0].clientY - canvas.offsetTop;
+
+    // Check each circle to see if the touch was inside
+    circles.forEach(function(circle, index) {
+        if (isInsideCircle({x: touchX, y: touchY}, circle)) {
+            console.log("Touched circle:", index + 1);
+            // Add your logic here for when a circle is touched
+            // For example, change the color of the touched circle
+            ctx.fillStyle = 'red'; // Change color to indicate touch
+            drawCircle(circle.x, circle.y, circle.radius);
+        }
+    });
+}
+
+// Add event listener for touch events
+canvas.addEventListener('touchstart', onTouch, false);
+
+
+    </script>
+</body>
+</html>
