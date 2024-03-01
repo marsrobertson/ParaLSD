@@ -17,6 +17,7 @@
   <link rel="stylesheet" type="text/css" href="styles.css" />
   <script src="centroids.js"></script>
   <script src="convex.js"></script>
+  <script src="calculations.js"></script>
 
 </head>
 <body>
@@ -93,8 +94,9 @@ function drawCircle(x, y, id) {
   touchArea.appendChild(circle);
 }
 
+let clusters = []; // globally accessible
 $("#calibrate").click(function() {
-  let clusters = kMeansClustering(points, 5);
+  clusters = kMeansClustering(points, 5);
 
   // Clear existing content in 'paths' element
   const pathsElement = document.getElementById('paths');
@@ -134,9 +136,33 @@ $("#calibrate").click(function() {
     // Append the SVG to the 'paths' element
     pathsElement.appendChild(svg);
   }
+
+  setTimeout(cleanupCalibration, 2000);
 });
 
+function cleanupCalibration() {
+  touchArea.removeEventListener('touchstart', handleTouch);
+  touchArea.removeEventListener('touchmove', handleTouch);
 
+  $("#paths").remove();
+  $(".circle").remove();
+
+  touchArea.addEventListener('touchstart', handleTouchOperations);
+  touchArea.addEventListener('touchmove', handleTouchOperations);
+}
+
+function handleTouchOperations(event) {
+  event.preventDefault();
+
+  const touches = event.touches;
+
+  console.log("OPERATIONS", touches);
+
+  for (let i = 0; i < touches.length; i++) {
+    const touch = touches[i];
+
+  }
+}
 
 
   </script>
