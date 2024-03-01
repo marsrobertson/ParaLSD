@@ -31,7 +31,7 @@
   </div>
   <button id="calibrate" style="position: absolute; bottom: 0; height: 40px;">Calibrate</button>
 
-  <div id="paths" style="position: absolute; width: 100vw; height: 100vh; top: 0; z-index: -1; background: red; opacity: 0.3"></div>
+  <div id="paths" style="position: absolute; width: 100vw; height: 100vh; top: 0; z-index: -1; "></div>
 
 <script>
 
@@ -117,10 +117,19 @@ $("#calibrate").click(function() {
     path.setAttribute('stroke', 'blue');
     path.setAttribute('fill', 'blue');
     path.setAttribute('stroke-width', 30);
-
-
-    // Append the path to the SVG
     svg.appendChild(path);
+
+
+    LPIC2 = _calculateLongestPath(clusters[i]); // LPIC = Longest Path In Cluster
+    const pathData = `M ${LPIC2[0].x},${LPIC2[0].y} L ${LPIC2[1].x},${LPIC2[1].y}`;
+
+    const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path2.setAttribute('d', pathData);
+    path2.setAttribute('fill', 'red');
+    path2.setAttribute('stroke', 'rgba(255, 0, 0, 0.3)');
+    path2.setAttribute('stroke-width', 40);
+    svg.appendChild(path2);
+
 
     // Append the SVG to the 'paths' element
     pathsElement.appendChild(svg);

@@ -20,7 +20,25 @@ function _distanceBetweenPoints(point1, point2) {
     const dx = point2.x - point1.x;
     const dy = point2.y - point1.y;
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+function _calculateLongestPath(clusterPoints) {
+  let longestDistance = 0;
+  let longestPath = [];
+
+  // Calculate distances between all pairs of points
+  for (let i = 0; i < clusterPoints.length - 1; i++) {
+      for (let j = i + 1; j < clusterPoints.length; j++) {
+          const distance = _distanceBetweenPoints(clusterPoints[i], clusterPoints[j]);
+          if (distance > longestDistance) {
+              longestDistance = distance;
+              longestPath = [clusterPoints[i], clusterPoints[j]];
+          }
+      }
   }
+
+  return longestPath;
+}
   
   function kMeansClustering(points, k) {
     let bestClusters = null;
