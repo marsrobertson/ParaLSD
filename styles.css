@@ -18,3 +18,7 @@ p {
   font-weight: bold;
   font-size: 34px;
 }
+
+svg.cluster {
+    position: absolute;
+}

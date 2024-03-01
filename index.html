@@ -59,8 +59,24 @@ function handleTouch(event) {
 
   for (let i = 0; i < touches.length; i++) {
     const touch = touches[i];
-    points.push({ x: touch.pageX, y: touch.pageY });
-    drawCircle(touch.pageX, touch.pageY, i);
+
+    const newPoint = { x: touch.pageX, y: touch.pageY };
+
+    // Check if the new point is at least 5 pixels away from the nearest existing point
+    let minDistance = Infinity;
+    for (const existingPoint of points) {
+      const distance = _distanceBetweenPoints(newPoint, existingPoint);
+      if (distance < minDistance) {
+        minDistance = distance;
+      }
+    }
+
+    if (minDistance >= 5) {
+      points.push(newPoint);
+      drawCircle(touch.pageX, touch.pageY, i);
+    }
+
+    // drawCircle(touch.pageX, touch.pageY, i);
   }
 }
 
@@ -71,32 +87,44 @@ let colors = ["black"];
 function drawCircle(x, y, id) {
   const circle = document.createElement('div');
   circle.className = 'circle';
-  circle.style.left = x + 'px';
-  circle.style.top = y + 'px';
+  circle.style.left = (x - 15) + 'px';
+  circle.style.top = (y - 15) + 'px';
   circle.style.backgroundColor = colors[id % colors.length];
   touchArea.appendChild(circle);
 }
 
 $("#calibrate").click(function() {
-  let clusters = kMeansClustering(points, 1);
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '100%');
+  let clusters = kMeansClustering(points, 5);
 
+  // Clear existing content in 'paths' element
+  const pathsElement = document.getElementById('paths');
+  pathsElement.innerHTML = '';
+
+  // Loop through each cluster
   for (let i = 0; i < clusters.length; i++) {
+    // Create a new SVG element for each cluster
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
+    svg.setAttribute('class', 'cluster');
+
     let svgPath = computeConvexHullSVG(clusters[i]);
     console.log(svgPath);
 
+    // Create a path element for the current cluster
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', svgPath);
     path.setAttribute('stroke', 'blue');
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-  }
+    path.setAttribute('fill', 'blue');
 
-  document.getElementById('paths').innerHTML = '';
-  document.getElementById('paths').appendChild(svg);
+    // Append the path to the SVG
+    svg.appendChild(path);
+
+    // Append the SVG to the 'paths' element
+    pathsElement.appendChild(svg);
+  }
 });
+
 
 
 

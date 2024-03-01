@@ -1,61 +1,87 @@
-function kMeansClustering(points, k) {
-    // Initialize cluster centroids randomly
-    let centroids = [];
-    for (let i = 0; i < k; i++) {
-      const randomIndex = Math.floor(Math.random() * points.length);
-      centroids.push(points[randomIndex]);
+function _calculateCenterOfGravity(points) {
+    if (points.length === 0) {
+      return { x: 0, y: 0 }; // Return {0, 0} if there are no points
     }
   
-    // Function to assign each point to the nearest cluster centroid
-    function assignPointsToClusters(points, centroids) {
-      const clusters = Array.from({ length: k }, () => []);
-      for (const point of points) {
+    let sumX = 0;
+    let sumY = 0;
+    for (const point of points) {
+      sumX += point.x;
+      sumY += point.y;
+    }
+  
+    const centerX = sumX / points.length;
+    const centerY = sumY / points.length;
+  
+    return { x: centerX, y: centerY };
+}
+
+function _distanceBetweenPoints(point1, point2) {
+    const dx = point2.x - point1.x;
+    const dy = point2.y - point1.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  
+  function kMeansClustering(points, k) {
+    let bestClusters = null;
+    let minTotalDistance = Infinity;
+  
+    // Deep copy of the points array
+    const originalPoints = JSON.parse(JSON.stringify(points));
+  
+    for (let iteration = 0; iteration < 100; iteration++) {
+      let centroids = [];
+      let clusters = [];
+  
+      // Restore points array to its original state before each iteration
+      points = JSON.parse(JSON.stringify(originalPoints));
+  
+      // Initialize centroids with k random points
+      for (let i = 0; i < k; i++) {
+        const randomIndex = Math.floor(Math.random() * points.length);
+        centroids.push(points[randomIndex]);
+        clusters.push([]); // Initialize clusters
+        points.splice(randomIndex, 1); // Remove selected point from points array
+      }
+  
+      // Main loop to assign points to clusters
+      while (points.length > 0) {
+        const point = points.shift(); // Get the first point from the array
+  
         let minDistance = Infinity;
         let closestCentroidIndex = -1;
+  
+        // Find the closest centroid for the current point
         for (let i = 0; i < centroids.length; i++) {
-          const distance = Math.sqrt((point.x - centroids[i].x) ** 2 + (point.y - centroids[i].y) ** 2);
+          const distance = _distanceBetweenPoints(point, centroids[i]);
           if (distance < minDistance) {
             minDistance = distance;
             closestCentroidIndex = i;
           }
         }
+  
+        // Assign the point to the closest cluster
         clusters[closestCentroidIndex].push(point);
       }
-      return clusters;
-    }
   
-    // Function to update cluster centroids based on the mean of points in each cluster
-    function updateCentroids(clusters) {
-      return clusters.map(cluster => {
-        if (cluster.length === 0) return { x: 0, y: 0 };
-        const sumX = cluster.reduce((acc, point) => acc + point.x, 0);
-        const sumY = cluster.reduce((acc, point) => acc + point.y, 0);
-        return { x: sumX / cluster.length, y: sumY / cluster.length };
-      });
-    }
-  
-    // Function to check if centroids have converged
-    function hasConverged(oldCentroids, newCentroids) {
-      for (let i = 0; i < oldCentroids.length; i++) {
-        const oldCentroid = oldCentroids[i];
-        const newCentroid = newCentroids[i];
-        if (Math.abs(oldCentroid.x - newCentroid.x) > 1 || Math.abs(oldCentroid.y - newCentroid.y) > 1) {
-          return false;
+      // Calculate total distance for the current clustering
+      let totalDistance = 0;
+      for (let i = 0; i < k; i++) {
+        const centroid = centroids[i];
+        const clusterPoints = clusters[i];
+        for (const point of clusterPoints) {
+          totalDistance += _distanceBetweenPoints(point, centroid);
         }
       }
-      return true;
+  
+      // Update best clustering if current clustering has lower total distance
+      if (totalDistance < minTotalDistance) {
+        bestClusters = clusters;
+        minTotalDistance = totalDistance;
+      }
     }
   
-    // Run K-means algorithm
-    let oldCentroids = null;
-    let clusters = null;
-    do {
-      oldCentroids = centroids;
-      clusters = assignPointsToClusters(points, centroids);
-      centroids = updateCentroids(clusters);
-    } while (!hasConverged(oldCentroids, centroids));
-  
-    // Return the clusters
-    return clusters;
+    // Return the clusters with the lowest total distance
+    return bestClusters;
   }
   
