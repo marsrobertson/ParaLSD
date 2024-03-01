@@ -18,6 +18,7 @@
   <script src="centroids.js"></script>
   <script src="convex.js"></script>
   <script src="calculations.js"></script>
+  <script src="pointsBackup.js"></script>
 
 </head>
 <body>
@@ -31,6 +32,7 @@
 
   </div>
   <button id="calibrate" style="position: absolute; bottom: 0; height: 40px;">Calibrate</button>
+  <button id="skip" style="position: absolute; bottom: 0; left: 100px; height: 40px;">Skip cali</button>
 
   <div id="paths" style="position: absolute; width: 100vw; height: 100vh; top: 0; z-index: -1; "></div>
 
@@ -95,9 +97,14 @@ function drawCircle(x, y, id) {
 }
 
 let clusters = []; // globally accessible
+
+
 $("#calibrate").click(function() {
   clusters = kMeansClustering(points, 5);
+  calibrate();
+});
 
+function calibrate() {
   // Clear existing content in 'paths' element
   const pathsElement = document.getElementById('paths');
   pathsElement.innerHTML = '';
@@ -138,13 +145,19 @@ $("#calibrate").click(function() {
   }
 
   setTimeout(cleanupCalibration, 2000);
+}
+
+
+$("#skip").click(function() {
+  clusters = kMeansClustering(pointsBackup, 5);
+  calibrate();
 });
 
 function cleanupCalibration() {
   touchArea.removeEventListener('touchstart', handleTouch);
   touchArea.removeEventListener('touchmove', handleTouch);
 
-  $("#paths").remove();
+  // $("#paths").remove();
   $(".circle").remove();
 
   touchArea.addEventListener('touchstart', handleTouchOperations);
