@@ -48,5 +48,5 @@ function computeConvexHullSVG(points) {
     }
   
     // Return the SVG path data
-    return `<path d="${pathData}" stroke="blue" fill="none" />`;
+    return pathData;
 }
