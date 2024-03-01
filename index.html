@@ -16,6 +16,7 @@
   <script src="jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="styles.css" />
   <script src="centroids.js"></script>
+  <script src="convex.js"></script>
 
 </head>
 <body>
@@ -28,8 +29,8 @@
     <p id="infobox"></p>
 
     <button id="calibrate" style="position: absolute; bottom: 0; height: 40px;">Calibrate</button>
-
   </div>
+  <div id="paths" style="position: absolute; width: 100vw; height: 100vh; top: 0; z-index: -1; background: red; opacity: 0.3"></div>
   <script>
 
 
@@ -47,12 +48,12 @@ function handleTouch(event) {
   const touches = event.touches;
 
   // TEMP FOR TESTING ON LOCALHOST
-  if (touches.length !== 5) {
-    $('#infobox').html('Use 5&nbsp;fingers for calibration');
-    return;
-  } else {
-    $('#infobox').text('');
-  }
+  // if (touches.length !== 5) {
+  //   $('#infobox').html('Use 5&nbsp;fingers for calibration');
+  //   return;
+  // } else {
+  //   $('#infobox').text('');
+  // }
 
   for (let i = 0; i < touches.length; i++) {
     const touch = touches[i];
@@ -73,6 +74,25 @@ function drawCircle(x, y, id) {
   circle.style.backgroundColor = colors[id % colors.length];
   touchArea.appendChild(circle);
 }
+
+$("#calibrate").click(function() {
+  let clusters = kMeansClustering(points, 5);
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '100%');
+
+  for (let i = 0; i < clusters.length; i++) {
+    let svgPath = computeConvexHullSVG(clusters[i]);
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', svgPath);
+    path.setAttribute('stroke', 'blue');
+    path.setAttribute('fill', 'none');
+    svg.appendChild(path);
+  }
+
+  document.getElementById('paths').innerHTML = '';
+  document.getElementById('paths').appendChild(svg);
+});
 
 
 
