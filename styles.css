@@ -1,0 +1,21 @@
+html, body { margin: 0; padding: 0; }
+
+#touch-area {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+.circle {
+  width: 30px;
+  height: 30px;
+  opacity: 0.1;
+  border-radius: 50%;
+  position: absolute;
+}
+
+p {
+  padding: 30px;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 34px;
+}
