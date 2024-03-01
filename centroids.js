@@ -29,7 +29,7 @@ function _distanceBetweenPoints(point1, point2) {
     // Deep copy of the points array
     const originalPoints = JSON.parse(JSON.stringify(points));
   
-    for (let iteration = 0; iteration < 100; iteration++) {
+    for (let iteration = 0; iteration < 1000; iteration++) {
       let centroids = [];
       let clusters = [];
   
