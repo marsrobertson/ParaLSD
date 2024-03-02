@@ -153,6 +153,12 @@ function cleanupCalibration() {
   touchArea.addEventListener('touchmove', handleTouchOperations);
 }
 
+const socket = new WebSocket("ws" + window.location.href.replace("http","").replace("https", "") + ":8000");
+
+// Send the current letter whenever it changes
+function sendLetter(letter) {
+    socket.send(letter);
+}
 
 let lineSVG = null;
 
@@ -194,6 +200,7 @@ function handleTouchOperations(event) {
     let currentLetter = letters[closestCentroidIndex][Math.floor(result.percentage / (100 / 6))];
     // console.log("Current letter: " + currentLetter + Math.floor(result.percentage/ (100 / 6)));
     $("#current-letter").text(currentLetter);
+    sendLetter(currentLetter);
 
     // Create a new SVG element
     lineSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
