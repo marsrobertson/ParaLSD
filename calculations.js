@@ -80,26 +80,46 @@ function createRectangles(startPoint, endPoint, index = 0) {
     return svgContainer;
 }
 
-function sortCentroids() {
-    // Find closest point on the path to each centroid
+// Find closest point on the path to each centroid
+function sortCentroidsAndStuff() {
+    
     let closestPoints = [];
     for (let i = 0; i < centroids.length; i++) {
         let minDistance = Infinity;
         let closestPoint = null;
-        for (let j = 0; j < path.length; j++) {
-            let distance = _distanceBetweenPoints(centroids[i], path[j]);
+        for (let j = 0; j < defaultPath.length; j++) {
+            let distance = _distanceBetweenPoints(centroids[i], defaultPath[j]);
             if (distance < minDistance) {
                 minDistance = distance;
-                closestPoint = path[j];
+                closestPoint = defaultPath[j];
             }
         }
         closestPoints.push(closestPoint);
     }
 
-    // Sort centroids based on the sequential order of closest points
-    centroids.sort((a, b) => {
-        let indexA = closestPoints.findIndex(point => point === a);
-        let indexB = closestPoints.findIndex(point => point === b);
-        return indexA - indexB;
+    dataObject = [];
+    for (let i = 0; i < 5; i++) {
+        dataObject.push({
+            centroids: centroids[i],
+            closestPoint: closestPoints[i],
+            longestPaths: longestPaths[i]
+        });
+    }
+
+    console.log(dataObject);
+
+    // Sort dataObject based on the distance from centroid to the closest point on defaultPath
+    dataObject.sort((a, b) => {
+        let distanceA = _distanceBetweenPoints(a.centroid, a.closestPoint);
+        let distanceB = _distanceBetweenPoints(b.centroid, b.closestPoint);
+        return distanceA - distanceB;
     });
+
+    console.log(dataObject);
+
+    // UPDATING GLOBAL VARIABLES
+    clusters = dataObject.clusters;
+    longestPaths = dataObject.longestPaths;
+    centroids = dataObject.centroids;
+
 }

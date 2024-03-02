@@ -57,6 +57,7 @@ function drawCircle(x, y, id) {
 let clusters = []; // globally accessible
 let centroids = [];
 let longestPaths = [];
+
 let letters = [
     ['a', 'b', 'c', 'd', 'e', 'f'],
     ['g', 'h', 'i', 'j', 'k', 'l'],
@@ -129,8 +130,7 @@ function calibrate() {
 
   setTimeout(cleanupCalibration, 1000); // not sure why delay, probably the visual aspect
 
-  
-
+  sortCentroidsAndStuff();
 
   for (let i=0; i<5; i++) {
     const path = longestPaths[i];
