@@ -75,6 +75,11 @@ $("#skip").click(function() {
   calibrate();
 });
 
+// $("#saveDefault").click(function() {
+//     b = points;
+//     console.log(b);
+// })
+
 function calibrate() {
   // Assining center of gravity for ease of calculation later on
   for (let i = 0; i < clusters.length; i++) {
@@ -123,6 +128,9 @@ function calibrate() {
   }
 
   setTimeout(cleanupCalibration, 1000); // not sure why delay, probably the visual aspect
+
+  
+
 
   for (let i=0; i<5; i++) {
     const path = longestPaths[i];

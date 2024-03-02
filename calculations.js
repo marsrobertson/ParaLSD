@@ -79,3 +79,27 @@ function createRectangles(startPoint, endPoint, index = 0) {
 
     return svgContainer;
 }
+
+function sortCentroids() {
+    // Find closest point on the path to each centroid
+    let closestPoints = [];
+    for (let i = 0; i < centroids.length; i++) {
+        let minDistance = Infinity;
+        let closestPoint = null;
+        for (let j = 0; j < path.length; j++) {
+            let distance = _distanceBetweenPoints(centroids[i], path[j]);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestPoint = path[j];
+            }
+        }
+        closestPoints.push(closestPoint);
+    }
+
+    // Sort centroids based on the sequential order of closest points
+    centroids.sort((a, b) => {
+        let indexA = closestPoints.findIndex(point => point === a);
+        let indexB = closestPoints.findIndex(point => point === b);
+        return indexA - indexB;
+    });
+}
