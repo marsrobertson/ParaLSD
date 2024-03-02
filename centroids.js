@@ -47,7 +47,7 @@ function _calculateLongestPath(clusterPoints) {
     // Deep copy of the points array
     const originalPoints = JSON.parse(JSON.stringify(points));
   
-    for (let iteration = 0; iteration < 1000; iteration++) {
+    for (let iteration = 0; iteration < 5000; iteration++) {
       let centroids = [];
       let clusters = [];
   

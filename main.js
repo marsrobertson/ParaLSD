@@ -132,6 +132,8 @@ function calibrate() {
 
   sortCentroidsAndStuff();
 
+  console.log("Longest paths: main.js", longestPaths);
+
   for (let i=0; i<5; i++) {
     const path = longestPaths[i];
     const rect = createRectangles(path[0], path[1], i);
@@ -151,15 +153,20 @@ function cleanupCalibration() {
   touchArea.addEventListener('touchmove', handleTouchOperations);
 }
 
+
+let lineSVG = null;
+
 function handleTouchOperations(event) {
   event.preventDefault();
 
+  if (lineSVG) {
+    rectangles.removeChild(lineSVG);
+  }
+
   const touches = event.touches;
 
-  console.log("OPERATIONS", touches);
-
-  for (let i = 0; i < touches.length; i++) {
-    const touch = touches[i];
+  // TAKING INTO ACCOUNT SINGLE TOUCH ONLY (no chords)
+    const touch = touches[0];
     let minDistance = Infinity;
     let closestCentroid = null;
     let closestCentroidIndex = null
@@ -179,11 +186,32 @@ function handleTouchOperations(event) {
     console.log("Closest centroid to touch point:", closestCentroid);
 
     let result = calculatePerpendicularSection(longestPaths[closestCentroidIndex][0], longestPaths[closestCentroidIndex][1], {x: touch.pageX, y: touch.pageY} );
-    console.log("Perpendicular section:", result);
+    console.log("Perpendicular section:", result); // intersectionPoint: {x: 296.0777670856169, y: 350.50301367561997}, percentage: 136.77813821209946
 
-    // intersectionPoint: {x: 296.0777670856169, y: 350.50301367561997}, percentage: 136.77813821209946
+    // Create a new SVG element
+    lineSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
+    // Set the attributes for the SVG element
+    lineSVG.setAttribute("width", "100%"); // Set the width to 100%
+    lineSVG.setAttribute("height", "100%"); // Set the height to 100%
+    lineSVG.setAttribute("viewBox", "0 0 " + rectangles.clientWidth + " " + rectangles.clientHeight); // Set the viewBox to match the SVG container size
 
-}
+    // Create a line element within the SVG
+    let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+    // Set the attributes for the line
+    line.setAttribute("x1", result.intersectionPoint.x); // Set the starting x-coordinate
+    line.setAttribute("y1", result.intersectionPoint.y); // Set the starting y-coordinate
+    line.setAttribute("x2", touch.pageX); // Set the ending x-coordinate
+    line.setAttribute("y2", touch.pageY); // Set the ending y-coordinate
+    line.setAttribute("stroke", "blue"); // Set the stroke color
+    line.setAttribute("stroke-width", "2"); // Set the stroke width
+
+    // Append the line to the SVG
+    lineSVG.appendChild(line);
+
+    // Append the SVG to the SVG container
+    rectangles.appendChild(lineSVG);
+
 
 }

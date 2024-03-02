@@ -21,7 +21,12 @@ function calculatePerpendicularSection(point1, point2, point3) {
     const totalLength = Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
 
     // Calculate the percentage of the distance from the start of the line segment to the intersection point
-    const percentage = (distanceToIntersection / totalLength) * 100;
+    let percentage = (distanceToIntersection / totalLength) * 100;
+
+    // Check if the intersection point is on the opposite side of point2 compared to point1
+    if ((point2.x > point1.x && intersectionX < point1.x) || (point2.x < point1.x && intersectionX > point1.x)) {
+        percentage = -percentage; // Make the percentage negative if the intersection point is on the opposite side
+    }
 
     // Return the intersection point and the percentage
     return { intersectionPoint: { x: intersectionX, y: intersectionY }, percentage };
@@ -82,7 +87,7 @@ function createRectangles(startPoint, endPoint, index = 0) {
 
 // Find closest point on the path to each centroid
 function sortCentroidsAndStuff() {
-    
+
     let closestPoints = [];
     for (let i = 0; i < centroids.length; i++) {
         let minDistance = Infinity;
@@ -108,18 +113,18 @@ function sortCentroidsAndStuff() {
 
     console.log(dataObject);
 
-    // Sort dataObject based on the distance from centroid to the closest point on defaultPath
     dataObject.sort((a, b) => {
-        let distanceA = _distanceBetweenPoints(a.centroid, a.closestPoint);
-        let distanceB = _distanceBetweenPoints(b.centroid, b.closestPoint);
-        return distanceA - distanceB;
+        let indexA = defaultPath.indexOf(a.closestPoint);
+        let indexB = defaultPath.indexOf(b.closestPoint);
+        return indexA - indexB;
     });
 
     console.log(dataObject);
 
     // UPDATING GLOBAL VARIABLES
-    clusters = dataObject.clusters;
-    longestPaths = dataObject.longestPaths;
-    centroids = dataObject.centroids;
+    longestPaths = dataObject.map((item) => item.longestPaths);
+    centroids = dataObject.map((item) => item.centroids);
+    closestPoints = dataObject.map((item) => item.closestPoint);
+
 
 }
