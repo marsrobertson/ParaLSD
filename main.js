@@ -161,6 +161,7 @@ function handleTouchOperations(event) {
 
   if (lineSVG) {
     rectangles.removeChild(lineSVG);
+    lineSVG = null;
   }
 
   const touches = event.touches;
@@ -183,10 +184,16 @@ function handleTouchOperations(event) {
     }
 
     // 'closestCentroid' now contains the centroid closest to the current touch point
-    console.log("Closest centroid to touch point:", closestCentroid);
+    // console.log("Closest centroid to touch point: ", closestCentroidIndex);
 
     let result = calculatePerpendicularSection(longestPaths[closestCentroidIndex][0], longestPaths[closestCentroidIndex][1], {x: touch.pageX, y: touch.pageY} );
-    console.log("Perpendicular section:", result); // intersectionPoint: {x: 296.0777670856169, y: 350.50301367561997}, percentage: 136.77813821209946
+    // console.log("Perpendicular section:", result); // intersectionPoint: {x: 296.0777670856169, y: 350.50301367561997}, percentage: 136.77813821209946
+
+    if (result.percentage > 100 || result.percentage < 0) return; // OUT OF BOUNDS, do nothing, return
+
+    let currentLetter = letters[closestCentroidIndex][Math.floor(result.percentage / (100 / 6))];
+    // console.log("Current letter: " + currentLetter + Math.floor(result.percentage/ (100 / 6)));
+    $("#current-letter").text(currentLetter);
 
     // Create a new SVG element
     lineSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");

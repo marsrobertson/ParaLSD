@@ -19,6 +19,12 @@ p {
   font-size: 34px;
 }
 
+#current-letter {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 svg.cluster {
     position: absolute;
 }
