@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="jquery.min.js"></script>
-  <title>Monitor</title>
+  <title>Para🄻y🅂e🄳</title>
 </head>
 <body>
-  <h1>Monitor</h1>
-  <p id="log"></p>
+  <h1>Para🄻y🅂e🄳</h1>
+  <p id="log" style="word-wrap: break-word; padding: 10px; border: 2px solid black; background: rgba(0.1,0.1, 0.1, 0.1); min-height: 300px"></p>
   <script>
 
     let text = ""
@@ -25,6 +25,11 @@
     // When a message is received from the server
     socket.addEventListener('message', function (event) {
         console.log('Message from server:', event.data);
+
+        let currentText = $('#log').text();
+        let lastLetter = currentText[currentText.length - 1];
+        if(lastLetter === event.data) return;
+
         text += event.data;
         $('#log').text(text);
     });

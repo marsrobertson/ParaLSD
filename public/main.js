@@ -128,7 +128,7 @@ function calibrate() {
     pathsElement.appendChild(svg);
   }
 
-  setTimeout(cleanupCalibration, 1000); // not sure why delay, probably the visual aspect
+  setTimeout(cleanupCalibration, 1500); // not sure why delay, probably the visual aspect
 
   sortCentroidsAndStuff();
 
@@ -146,7 +146,7 @@ function cleanupCalibration() {
   touchArea.removeEventListener('touchstart', handleTouch);
   touchArea.removeEventListener('touchmove', handleTouch);
 
-  // $("#paths").remove();
+  $("#paths").remove();
   $(".circle").remove();
 
   touchArea.addEventListener('touchstart', handleTouchOperations);
