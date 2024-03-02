@@ -26,3 +26,56 @@ function calculatePerpendicularSection(point1, point2, point3) {
     // Return the intersection point and the percentage
     return { intersectionPoint: { x: intersectionX, y: intersectionY }, percentage };
 }
+
+function createRectangles(startPoint, endPoint, index = 0) {
+
+    // Calculate the length of the section
+    const length = Math.sqrt((endPoint.x - startPoint.x) ** 2 + (endPoint.y - startPoint.y) ** 2);
+
+    // Calculate the length of each rectangle
+    const rectangleLength = length / 6;
+
+    // Calculate the direction vector of the section
+    const dx = (endPoint.x - startPoint.x) / length;
+    const dy = (endPoint.y - startPoint.y) / length;
+
+    // Create a new SVG container
+    const svgContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgContainer.setAttribute("width", "100%");
+    svgContainer.setAttribute("height", "100%");
+
+    // Loop to create and draw each rectangle
+    for (let i = 0; i < 6; i++) {
+        // Calculate the coordinates of the top-left corner of the current rectangle
+        const x1 = startPoint.x + i * rectangleLength * dx;
+        const y1 = startPoint.y + i * rectangleLength * dy;
+
+        // Create a <rect> element for the rectangle
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", x1);
+        rect.setAttribute("y", y1);
+        rect.setAttribute("width", rectangleLength);
+        rect.setAttribute("height", 30); // Width of the rectangle is 30px
+        rect.setAttribute("fill", "none"); // No fill color
+        rect.setAttribute("stroke", "black"); // Black border
+        rect.setAttribute("stroke-width", "1"); // Border width
+        svgContainer.appendChild(rect);
+
+        // Calculate the coordinates for drawing the letter "x" inside the rectangle
+        const centerX = x1 + rectangleLength / 2;
+        const centerY = y1 + 15; // Vertical center of the rectangle
+
+        // Create a <text> element for the letter "x"
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", centerX);
+        text.setAttribute("y", centerY);
+        text.setAttribute("text-anchor", "middle"); // Center the text horizontally
+        text.setAttribute("dominant-baseline", "middle"); // Center the text vertically
+        text.setAttribute("font-family", "Arial"); // Font family
+        text.setAttribute("font-size", "12"); // Font size
+        text.textContent = letters[index][i];
+        svgContainer.appendChild(text);
+    }
+
+    return svgContainer;
+}

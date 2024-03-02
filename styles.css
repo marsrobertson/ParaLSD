@@ -22,3 +22,7 @@ p {
 svg.cluster {
     position: absolute;
 }
+
+#rectangles svg {
+    position: absolute;
+}
