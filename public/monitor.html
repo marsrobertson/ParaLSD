@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="jquery.min.js"></script>
   <title>Monitor</title>
 </head>
 <body>
   <h1>Monitor</h1>
+  <p id="log"></p>
   <script>
+
+    let text = ""
+
     const socket = new WebSocket('ws://localhost:8000?name=' + encodeURIComponent("MONITOR"));
 
     // When the WebSocket connection is opened
@@ -20,6 +25,8 @@
     // When a message is received from the server
     socket.addEventListener('message', function (event) {
         console.log('Message from server:', event.data);
+        text += event.data;
+        $('#log').text(text);
     });
 
     // When the WebSocket connection is closed

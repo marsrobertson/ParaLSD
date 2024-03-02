@@ -13,11 +13,11 @@ let monitor;
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Function to send heartbeat to the monitor
-function sendHeartbeat() {
-  if (monitor && monitor.readyState === WebSocket.OPEN) {
-    monitor.send('Heartbeat from server');
-  }
-}
+// function sendHeartbeat() {
+//   if (monitor && monitor.readyState === WebSocket.OPEN) {
+//     monitor.send('Heartbeat from server');
+//   }
+// }
 
 // WebSocket server logic
 wss.on('connection', function connection(ws) {
@@ -49,7 +49,7 @@ wss.on('connection', function connection(ws) {
 });
 
 // Periodically send heartbeat to the monitor every 5 seconds
-setInterval(sendHeartbeat, 1000);
+// setInterval(sendHeartbeat, 1000);
 
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
